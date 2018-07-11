@@ -12,7 +12,7 @@
 	var result = s.join("");
 	return result; 
 }
-/ "{{"
+/ e:"{{"
 { return e.charAt(0); }
 / e:"}}"
 { return e.charAt(0); }
