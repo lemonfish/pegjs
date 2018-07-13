@@ -194,7 +194,19 @@
 }
 / "N"
 { 
-	return { type: 'keyword', value: N };
+	return { type: 'keyword', value: this.N };
+}
+/ "$"
+{ 
+	return { type: 'keyword', value: this.$ };
+}
+/ "jQuery"
+{ 
+	return { type: 'keyword', value: this.$ };
+}
+/ "window"
+{ 
+	return { type: 'keyword', value: window };
 }
 / "Math"
 { 
