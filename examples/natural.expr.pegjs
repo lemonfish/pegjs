@@ -3,19 +3,21 @@
 { return e.join(""); }
 
 식
-= 표현식영역
-/ 고정문자열
+= 고정문자열
+/ 표현식영역
 
 고정문자열
-= s:[^{}]+
+= e:"\\{"
+{ return e.charAt(1); }
+/ e:"\\}"
+{ return e.charAt(1); }
+/ e:"\\"
+{ return e.charAt(0); }
+/ s:[^\\{}]+
 { 
 	var result = s.join("");
 	return result; 
 }
-/ e:"{{"
-{ return e.charAt(0); }
-/ e:"}}"
-{ return e.charAt(0); }
 
 표현식영역
 = "{"  공백 e:표현식 공백 "}"
@@ -83,12 +85,20 @@
 표현식요소
 = e:표현식요소값 attrs:(함수/속성)*
 { 
-	var attr, result = e;
+	var attr, result = e.value;
+    if(this._.keymap){
+        this._.keymap[e.name] = this._.keymap[e.name] ? this._.keymap[e.name] + 1 : 1;
+    }
+    var path = e.name;
     if(attrs.length > 0){
     	for(var i = 0; i < attrs.length; i++){
         	attr = attrs[i];
             switch(attr.type){
             	case 'attr':
+                path = path + '.' + attr.name;
+                if(this._.keymap){
+                    this._.keymap[path] = this._.keymap[path] ? this._.keymap[path] + 1 : 1;
+                }
                 result = result[attr.name];
                 break;
                 case 'fn':
@@ -97,6 +107,7 @@
             }
         }
     }
+
     return result;
 }
 / 표현식_서브
@@ -104,22 +115,26 @@
 
 속성
 = "." attr:식별자
-{ return { type: 'attr', name: attr }; }
+{ 
+	return { type: 'attr', name: attr }; 
+}
 / "[" 공백 e:표현식 공백 "]"
 { return { type: 'attr', name: e }; }
 
 표현식_전역함수
-= fn:식별자 공백 "(" 공백 p:파라미터* 공백 ")"
+= fn:식별자 공백 "(" 공백 p:파라미터? 공백 ")"
 { return window[fn].apply(window, p); }
 
 함수
-= attr:속성 공백 "(" 공백 p:파라미터* 공백 ")"
+= attr:속성 공백 "(" 공백 p:파라미터? 공백 ")"
 { return { type: 'fn', name: attr.name, params: p }; }
 
 표현식요소값
 = 표현식_문자열
+/ 표현식_배열
 / 표현식_전역함수
 / 표현식_변수
+/ 표현식_객체
 
 
 
@@ -135,6 +150,26 @@
     return params;
 }
 
+표현식_배열
+= "[" 공백 e:표현식 es:(공백 "," 공백 표현식)* 공백 "]"
+{
+    var arr = [e];
+    for(var i = 0; i < es.length; i++){
+    	arr.push(es[i][3]);
+    }
+	return { type: 'array', value: arr };
+}
+
+표현식_객체
+= "{" 공백 p1:식별자 공백 ":" 공백 v1:표현식 공백 ps:(공백 "," 공백 식별자 공백 ":" 공백 표현식 공백)* 공백 "}"
+{
+	var obj = {};
+    obj[typeof p1 == 'object' ? p1.value : p1 ] = v1;
+    for(var i = 0; i < ps.length; i++){
+    	obj[ps[i][3]] = ps[i][7];
+    }
+	return { type: 'object', name: 'anonymous', value: obj };
+}
 
 표현식_서브
 = "("  공백 e:표현식 공백 ")"
@@ -150,13 +185,30 @@
 
 키워드
 = "true"
-{ return true; }
+{ 
+	return { type: 'keyword', value:true };
+}
 / "false"
-{ return false; }
+{ 
+	return { type: 'keyword', value: false };
+}
 / "N"
-{ return N; }
+{ 
+	return { type: 'keyword', value: N };
+}
 / "Math"
-{ return Math; }
+{ 
+	return { type: 'keyword', value: Math }; 
+}
+/ "this"
+{
+    return { type: 'keyword', value: this.context };
+}
+/ "_"
+{
+    return { type: 'keyworld', value: this._ };
+}
+
 
 공백
 = [\t\n ]*
@@ -190,15 +242,16 @@
 표현식_문자열
 = "\"" s:[^"]* "\""
 { 
-	return s.join(""); 
+	return { type: 'literal', value: s.join("") }; 
 }
 / "\'" s:[^']* "\'"
 { 
-	return s.join(""); 
+	return { type: 'literal', value: s.join("") }; 
 }
 
 표현식_변수
 = 키워드
 / e:식별자
-{ return this[e]; }
-
+{ 
+	return { type: 'property', value: this.context[e], name: e };
+}
