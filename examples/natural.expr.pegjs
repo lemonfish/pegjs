@@ -212,6 +212,10 @@
 { 
 	return { type: 'keyword', value: Math }; 
 }
+/ "JSON"
+{ 
+	return { type: 'keyword', value: JSON }; 
+}
 / "this"
 {
     return { type: 'keyword', value: this.context };
