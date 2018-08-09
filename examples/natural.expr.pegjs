@@ -123,7 +123,7 @@
 
 표현식_전역함수
 = fn:식별자 공백 "(" 공백 p:파라미터? 공백 ")"
-{ return window[fn].apply(window, p); }
+{ return { type: 'gfn', name: fn, params: p, value: window[fn].apply(window, p) }; }
 
 함수
 = attr:속성 공백 "(" 공백 p:파라미터? 공백 ")"
