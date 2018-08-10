@@ -240,55 +240,55 @@
     };
     var peg$f4 = function(e) { return e; };
     var peg$f5 = function(left, right) { 
-    	var op, result = left();
+    	var op, result = typeof left == 'function' ? left() : left;
         if(right.length > 0){
     		for(var i = 0; i < right.length; i++){
               op = right[i];
               switch(op[1]){
                   case "+":
-                  result = result + op[3]();
+                  result = result + (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;
                   case "-":
-                  result = result - op[3]();        
+                  result = result - (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;
                   case "*":
-                  result = result * op[3]();        
+                  result = result * (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;              
                   case "/":
-                  result = result / op[3]();
+                  result = result / (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;                            
                   case "<":
-                  result = result < op[3]();
+                  result = result < (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;                                          
                   case ">":
-                  result = result > op[3]();
+                  result = result > (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;   
                   case "==":
-                  result = result == op[3]();
+                  result = result == (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;   
                   case "<=":
-                  result = result <= op[3]();
+                  result = result <= (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;   
                   case ">=":
-                  result = result >= op[3]();
+                  result = result >= (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;   
                   case "!=":
-                  result = result != op[3]();
+                  result = result != (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;          
                   case "&&":
-                  result = result && op[3]();
+                  result = result && (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;
                   case "||":
-                  result = result || op[3]();
+                  result = result || (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;
                   case "===":
-                  result = result === op[3]();
+                  result = result ===(typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;              
                   case "!==":
-                  result = result !== op[3]();
+                  result = result !== (typeof op[3] == 'function' ? op[3]() : op[3]);
                   break;               
                   case "?":
-                  result = result ? op[3]() : op[7]();
+                  result = result ? (typeof op[3] == 'function' ? op[3]() : op[3]) : (typeof op[7] == 'function' ? op[7]() : op[7]);
                   break;
               }            
             }
