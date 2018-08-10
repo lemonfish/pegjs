@@ -26,55 +26,55 @@
 표현식
 = left:표현식요소 right:(공백 연산자 공백 표현식요소 공백 ":"? 공백 표현식요소?)*
 { 
-	var op, result = left;
+	var op, result = left();
     if(right.length > 0){
 		for(var i = 0; i < right.length; i++){
           op = right[i];
           switch(op[1]){
               case "+":
-              result = result + op[3];
+              result = result + op[3]();
               break;
               case "-":
-              result = result - op[3];        
+              result = result - op[3]();        
               break;
               case "*":
-              result = result * op[3];        
+              result = result * op[3]();        
               break;              
               case "/":
-              result = result / op[3];
+              result = result / op[3]();
               break;                            
               case "<":
-              result = result < op[3];
+              result = result < op[3]();
               break;                                          
               case ">":
-              result = result > op[3];
+              result = result > op[3]();
               break;   
               case "==":
-              result = result == op[3];
+              result = result == op[3]();
               break;   
               case "<=":
-              result = result <= op[3];
+              result = result <= op[3]();
               break;   
               case ">=":
-              result = result >= op[3];
+              result = result >= op[3]();
               break;   
               case "!=":
-              result = result != op[3];
+              result = result != op[3]();
               break;          
               case "&&":
-              result = result && op[3];
+              result = result && op[3]();
               break;
               case "||":
-              result = result || op[3];
+              result = result || op[3]();
               break;
               case "===":
-              result = result === op[3];
+              result = result === op[3]();
               break;              
               case "!==":
-              result = result !== op[3];
+              result = result !== op[3]();
               break;               
               case "?":
-              result = result ? op[3] : op[7];
+              result = result ? op[3]() : op[7]();
               break;
           }            
         }
@@ -85,30 +85,31 @@
 표현식요소
 = e:표현식요소값 attrs:(함수/속성)*
 { 
-	var attr, result = e.value;
-    if(this._.keymap){
-        this._.keymap[e.name] = this._.keymap[e.name] ? this._.keymap[e.name] + 1 : 1;
-    }
-    var path = e.name;
-    if(attrs.length > 0){
-    	for(var i = 0; i < attrs.length; i++){
-        	attr = attrs[i];
-            switch(attr.type){
-            	case 'attr':
-                path = path + '.' + attr.name;
-                if(this._.keymap){
-                    this._.keymap[path] = this._.keymap[path] ? this._.keymap[path] + 1 : 1;
+    return function(){
+        var attr, result = e.type == 'gfn' ? window[e.name].apply(window, e.params) : e.value;
+        if(this._.keymap){
+            this._.keymap[e.name] = this._.keymap[e.name] ? this._.keymap[e.name] + 1 : 1;
+        }
+        var path = e.name;
+        if(attrs.length > 0){
+            for(var i = 0; i < attrs.length; i++){
+                attr = attrs[i];
+                switch(attr.type){
+                    case 'attr':
+                    path = path + '.' + attr.name;
+                    if(this._.keymap){
+                        this._.keymap[path] = this._.keymap[path] ? this._.keymap[path] + 1 : 1;
+                    }
+                    result = result[attr.name];
+                    break;
+                    case 'fn':
+                    result = result[attr.name].apply(result, attr.params);
+                    break;
                 }
-                result = result[attr.name];
-                break;
-                case 'fn':
-                result = result[attr.name].apply(result, attr.params);
-                break;
             }
         }
-    }
-
-    return result;
+        return result;
+    };
 }
 / 표현식_서브
 / 표현식_숫자
@@ -123,7 +124,7 @@
 
 표현식_전역함수
 = fn:식별자 공백 "(" 공백 p:파라미터? 공백 ")"
-{ return { type: 'gfn', name: fn, params: p, value: window[fn].apply(window, p) }; }
+{ return { type: 'gfn', name: fn, params: p }; }
 
 함수
 = attr:속성 공백 "(" 공백 p:파라미터? 공백 ")"
