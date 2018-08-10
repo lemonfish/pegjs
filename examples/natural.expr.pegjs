@@ -197,6 +197,10 @@
 { 
 	return { type: 'keyword', value: this.N };
 }
+/ "Math"
+{ 
+	return { type: 'keyword', value: Math };
+}
 / "$"
 { 
 	return { type: 'keyword', value: this.$ };
@@ -249,9 +253,12 @@
 
 
 표현식_숫자
-= n1:[0-9]+ dot:"."? n2:[0-9]*
+= sign:[\-]? n1:[0-9]+ dot:"."? n2:[0-9]*
 { 
 	var num = Number(n1.join("") + (dot ? "." : "") + (n2 ? n2.join("") : ""), 10);
+    if(sign){
+        num = -num; 
+    }
 	return num
 }
 
