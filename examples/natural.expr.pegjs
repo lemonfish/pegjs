@@ -85,10 +85,11 @@
 표현식요소
 = e:표현식요소값 attrs:(함수/속성)*
 { 
+    var self = this;
     return function(){
         var attr, result = e.type == 'gfn' ? window[e.name].apply(window, e.params) : e.value;
-        if(this._.keymap){
-            this._.keymap[e.name] = this._.keymap[e.name] ? this._.keymap[e.name] + 1 : 1;
+        if(self._.keymap){
+            self._.keymap[e.name] = self._.keymap[e.name] ? self._.keymap[e.name] + 1 : 1;
         }
         var path = e.name;
         if(attrs.length > 0){
@@ -97,8 +98,8 @@
                 switch(attr.type){
                     case 'attr':
                     path = path + '.' + attr.name;
-                    if(this._.keymap){
-                        this._.keymap[path] = this._.keymap[path] ? this._.keymap[path] + 1 : 1;
+                    if(self._.keymap){
+                        self._.keymap[path] = self._.keymap[path] ? self._.keymap[path] + 1 : 1;
                     }
                     result = result[attr.name];
                     break;
