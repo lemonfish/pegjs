@@ -1,3 +1,24 @@
+{
+  function __v__(o) {
+      if(Array.isArray(o)){
+          for(var i = 0; i < o.length; i++){
+              o[i] = __v__(o[i]);
+          }
+          return o;
+      }else if(typeof o == 'function'){
+          return o();
+      }else if($.isPlainObject(o)){
+          for(var x in o){
+              if(o.hasOwnProperty(x)){
+                  o[x] = __v__(o[x]);
+              }
+          }
+      }else{
+          return o;
+      }
+  }
+}
+
 구문
 = e:식*
 { return e.join(""); }
@@ -21,65 +42,68 @@
 
 표현식영역
 = "{"  공백 e:표현식 공백 "}"
-{ return e; }
+{ return __v__(e); }
 
 표현식
 = left:표현식요소 right:(공백 연산자 공백 표현식요소 공백 ":"? 공백 표현식요소?)*
-{ 
-	var op, result = typeof left == 'function' ? left() : left;
-    if(right.length > 0){
-		for(var i = 0; i < right.length; i++){
-          op = right[i];
-          switch(op[1]){
-              case "+":
-              result = result + (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;
-              case "-":
-              result = result - (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;
-              case "*":
-              result = result * (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;              
-              case "/":
-              result = result / (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;                            
-              case "<":
-              result = result < (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;                                          
-              case ">":
-              result = result > (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;   
-              case "==":
-              result = result == (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;   
-              case "<=":
-              result = result <= (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;   
-              case ">=":
-              result = result >= (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;   
-              case "!=":
-              result = result != (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;          
-              case "&&":
-              result = result && (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;
-              case "||":
-              result = result || (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;
-              case "===":
-              result = result ===(typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;              
-              case "!==":
-              result = result !== (typeof op[3] == 'function' ? op[3]() : op[3]);
-              break;               
-              case "?":
-              result = result ? (typeof op[3] == 'function' ? op[3]() : op[3]) : (typeof op[7] == 'function' ? op[7]() : op[7]);
-              break;
-          }            
+{
+    return function(){
+        var op, result = __v__(left);
+        if(right.length > 0){
+            for(var i = 0; i < right.length; i++){
+                op = right[i];
+                switch(op[1]){
+                    case "+":
+                    result = result + __v__(op[3]);
+                    break;
+                    case "-":
+                    result = result - __v__(op[3]);
+                    break;
+                    case "*":
+                    result = result * __v__(op[3]);
+                    break;              
+                    case "/":
+                    result = result / __v__(op[3]);
+                    break;                            
+                    case "<":
+                    result = result < __v__(op[3]);
+                    break;                                          
+                    case ">":
+                    result = result > __v__(op[3]);
+                    break;   
+                    case "==":
+                    result = result == __v__(op[3]);
+                    break;   
+                    case "<=":
+                    result = result <= __v__(op[3]);
+                    break;   
+                    case ">=":
+                    result = result >= __v__(op[3]);
+                    break;   
+                    case "!=":
+                    result = result != __v__(op[3]);
+                    break;          
+                    case "&&":
+                    result = result && __v__(op[3]);
+                    break;
+                    case "||":
+                    result = result || __v__(op[3]);
+                    break;
+                    case "===":
+                    result = result === __v__(op[3]);
+                    break;              
+                    case "!==":
+                    result = result !== __v__(op[3]);
+                    break;               
+                    case "?":
+                    result = result ?  __v__(op[3]) :  __v__(op[7]);
+                    break;
+                }            
+            }
         }
-    }
-	return result; 
+    	return result; 
+    };
+
 }
 
 표현식요소
@@ -87,24 +111,24 @@
 { 
     var self = this;
     return function(){
-        var attr, result = e.type == 'gfn' ? window[e.name].apply(window, e.params) : e.value;
+        var attr, result = e.type == 'gfn' ? window[__v__(e.name)].apply(window, __v__(e.params)) : __v__(e.value);
         if(self._.keymap){
-            self._.keymap[e.name] = self._.keymap[e.name] ? self._.keymap[e.name] + 1 : 1;
+            self._.keymap[__v__(e.name)] = self._.keymap[__v__(e.name)] ? self._.keymap[__v__(e.name)] + 1 : 1;
         }
-        var path = e.name;
+        var path = __v__(e.name);
         if(attrs.length > 0){
             for(var i = 0; i < attrs.length; i++){
                 attr = attrs[i];
                 switch(attr.type){
                     case 'attr':
-                    path = path + '.' + attr.name;
+                    path = path + '.' + __v__(attr.name);
                     if(self._.keymap){
                         self._.keymap[path] = self._.keymap[path] ? self._.keymap[path] + 1 : 1;
                     }
-                    result = result[attr.name];
+                    result = result[__v__(attr.name)];
                     break;
                     case 'fn':
-                    result = result[attr.name].apply(result, attr.params);
+                    result = result[__v__(attr.name)].apply(result, __v__(attr.params));
                     break;
                 }
             }

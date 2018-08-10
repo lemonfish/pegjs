@@ -238,84 +238,87 @@
     	var result = s.join("");
     	return result; 
     };
-    var peg$f4 = function(e) { return e; };
-    var peg$f5 = function(left, right) { 
-    	var op, result = typeof left == 'function' ? left() : left;
-        if(right.length > 0){
-    		for(var i = 0; i < right.length; i++){
-              op = right[i];
-              switch(op[1]){
-                  case "+":
-                  result = result + (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;
-                  case "-":
-                  result = result - (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;
-                  case "*":
-                  result = result * (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;              
-                  case "/":
-                  result = result / (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;                            
-                  case "<":
-                  result = result < (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;                                          
-                  case ">":
-                  result = result > (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;   
-                  case "==":
-                  result = result == (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;   
-                  case "<=":
-                  result = result <= (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;   
-                  case ">=":
-                  result = result >= (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;   
-                  case "!=":
-                  result = result != (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;          
-                  case "&&":
-                  result = result && (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;
-                  case "||":
-                  result = result || (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;
-                  case "===":
-                  result = result ===(typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;              
-                  case "!==":
-                  result = result !== (typeof op[3] == 'function' ? op[3]() : op[3]);
-                  break;               
-                  case "?":
-                  result = result ? (typeof op[3] == 'function' ? op[3]() : op[3]) : (typeof op[7] == 'function' ? op[7]() : op[7]);
-                  break;
-              }            
+    var peg$f4 = function(e) { return __v__(e); };
+    var peg$f5 = function(left, right) {
+        return function(){
+            var op, result = __v__(left);
+            if(right.length > 0){
+                for(var i = 0; i < right.length; i++){
+                    op = right[i];
+                    switch(op[1]){
+                        case "+":
+                        result = result + __v__(op[3]);
+                        break;
+                        case "-":
+                        result = result - __v__(op[3]);
+                        break;
+                        case "*":
+                        result = result * __v__(op[3]);
+                        break;              
+                        case "/":
+                        result = result / __v__(op[3]);
+                        break;                            
+                        case "<":
+                        result = result < __v__(op[3]);
+                        break;                                          
+                        case ">":
+                        result = result > __v__(op[3]);
+                        break;   
+                        case "==":
+                        result = result == __v__(op[3]);
+                        break;   
+                        case "<=":
+                        result = result <= __v__(op[3]);
+                        break;   
+                        case ">=":
+                        result = result >= __v__(op[3]);
+                        break;   
+                        case "!=":
+                        result = result != __v__(op[3]);
+                        break;          
+                        case "&&":
+                        result = result && __v__(op[3]);
+                        break;
+                        case "||":
+                        result = result || __v__(op[3]);
+                        break;
+                        case "===":
+                        result = result === __v__(op[3]);
+                        break;              
+                        case "!==":
+                        result = result !== __v__(op[3]);
+                        break;               
+                        case "?":
+                        result = result ?  __v__(op[3]) :  __v__(op[7]);
+                        break;
+                    }            
+                }
             }
-        }
-    	return result; 
+        	return result; 
+        };
+
     };
     var peg$f6 = function(e, attrs) { 
         var self = this;
         return function(){
-            var attr, result = e.type == 'gfn' ? window[e.name].apply(window, e.params) : e.value;
+            var attr, result = e.type == 'gfn' ? window[__v__(e.name)].apply(window, __v__(e.params)) : __v__(e.value);
             if(self._.keymap){
-                self._.keymap[e.name] = self._.keymap[e.name] ? self._.keymap[e.name] + 1 : 1;
+                self._.keymap[__v__(e.name)] = self._.keymap[__v__(e.name)] ? self._.keymap[__v__(e.name)] + 1 : 1;
             }
-            var path = e.name;
+            var path = __v__(e.name);
             if(attrs.length > 0){
                 for(var i = 0; i < attrs.length; i++){
                     attr = attrs[i];
                     switch(attr.type){
                         case 'attr':
-                        path = path + '.' + attr.name;
+                        path = path + '.' + __v__(attr.name);
                         if(self._.keymap){
                             self._.keymap[path] = self._.keymap[path] ? self._.keymap[path] + 1 : 1;
                         }
-                        result = result[attr.name];
+                        result = result[__v__(attr.name)];
                         break;
                         case 'fn':
-                        result = result[attr.name].apply(result, attr.params);
+                        result = result[__v__(attr.name)].apply(result, __v__(attr.params));
                         break;
                     }
                 }
@@ -353,50 +356,51 @@
         }
     	return { type: 'object', name: 'anonymous', value: obj };
     };
-    var peg$f14 = function(w, w2) {
+    var peg$f14 = function(e) { return e; };
+    var peg$f15 = function(w, w2) {
     	return w + w2.join("");
     };
-    var peg$f15 = function() { 
+    var peg$f16 = function() { 
     	return { type: 'keyword', value:true };
     };
-    var peg$f16 = function() { 
+    var peg$f17 = function() { 
     	return { type: 'keyword', value: false };
     };
-    var peg$f17 = function() { 
+    var peg$f18 = function() { 
     	return { type: 'keyword', value: this.N };
     };
-    var peg$f18 = function() { 
+    var peg$f19 = function() { 
     	return { type: 'keyword', value: Math };
     };
-    var peg$f19 = function() { 
+    var peg$f20 = function() { 
     	return { type: 'keyword', value: this.$ };
     };
-    var peg$f20 = function() { 
+    var peg$f21 = function() { 
     	return { type: 'keyword', value: window };
     };
-    var peg$f21 = function() { 
+    var peg$f22 = function() { 
     	return { type: 'keyword', value: Math }; 
     };
-    var peg$f22 = function() { 
+    var peg$f23 = function() { 
     	return { type: 'keyword', value: JSON }; 
     };
-    var peg$f23 = function() {
+    var peg$f24 = function() {
         return { type: 'keyword', value: this.context };
     };
-    var peg$f24 = function() {
+    var peg$f25 = function() {
         return { type: 'keyworld', value: this._ };
     };
-    var peg$f25 = function(sign, n1, dot, n2) { 
+    var peg$f26 = function(sign, n1, dot, n2) { 
     	var num = Number(n1.join("") + (dot ? "." : "") + (n2 ? n2.join("") : ""), 10);
         if(sign){
             num = -num; 
         }
     	return num
     };
-    var peg$f26 = function(s) { 
+    var peg$f27 = function(s) { 
     	return { type: 'literal', value: s.join("") }; 
     };
-    var peg$f27 = function(e) { 
+    var peg$f28 = function(e) { 
     	return { type: 'property', value: this.context[e], name: e };
     };
 
@@ -1792,7 +1796,7 @@
           }
           if (s5 !== peg$FAILED) {
             peg$savedPos = s0;
-            s0 = peg$f4.call(options, s3);
+            s0 = peg$f14.call(options, s3);
           } else {
             peg$currPos = s0;
             s0 = peg$FAILED;
@@ -1870,7 +1874,7 @@
           }
         }
         peg$savedPos = s0;
-        s0 = peg$f14.call(options, s1, s2);
+        s0 = peg$f15.call(options, s1, s2);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -1922,7 +1926,7 @@
       }
       if (s1 !== peg$FAILED) {
         peg$savedPos = s0;
-        s1 = peg$f15.call(options);
+        s1 = peg$f16.call(options);
       }
       s0 = s1;
       if (s0 === peg$FAILED) {
@@ -1936,7 +1940,7 @@
         }
         if (s1 !== peg$FAILED) {
           peg$savedPos = s0;
-          s1 = peg$f16.call(options);
+          s1 = peg$f17.call(options);
         }
         s0 = s1;
         if (s0 === peg$FAILED) {
@@ -1950,7 +1954,7 @@
           }
           if (s1 !== peg$FAILED) {
             peg$savedPos = s0;
-            s1 = peg$f17.call(options);
+            s1 = peg$f18.call(options);
           }
           s0 = s1;
           if (s0 === peg$FAILED) {
@@ -1964,7 +1968,7 @@
             }
             if (s1 !== peg$FAILED) {
               peg$savedPos = s0;
-              s1 = peg$f18.call(options);
+              s1 = peg$f19.call(options);
             }
             s0 = s1;
             if (s0 === peg$FAILED) {
@@ -1978,7 +1982,7 @@
               }
               if (s1 !== peg$FAILED) {
                 peg$savedPos = s0;
-                s1 = peg$f19.call(options);
+                s1 = peg$f20.call(options);
               }
               s0 = s1;
               if (s0 === peg$FAILED) {
@@ -1992,7 +1996,7 @@
                 }
                 if (s1 !== peg$FAILED) {
                   peg$savedPos = s0;
-                  s1 = peg$f19.call(options);
+                  s1 = peg$f20.call(options);
                 }
                 s0 = s1;
                 if (s0 === peg$FAILED) {
@@ -2006,7 +2010,7 @@
                   }
                   if (s1 !== peg$FAILED) {
                     peg$savedPos = s0;
-                    s1 = peg$f20.call(options);
+                    s1 = peg$f21.call(options);
                   }
                   s0 = s1;
                   if (s0 === peg$FAILED) {
@@ -2020,7 +2024,7 @@
                     }
                     if (s1 !== peg$FAILED) {
                       peg$savedPos = s0;
-                      s1 = peg$f21.call(options);
+                      s1 = peg$f22.call(options);
                     }
                     s0 = s1;
                     if (s0 === peg$FAILED) {
@@ -2034,7 +2038,7 @@
                       }
                       if (s1 !== peg$FAILED) {
                         peg$savedPos = s0;
-                        s1 = peg$f22.call(options);
+                        s1 = peg$f23.call(options);
                       }
                       s0 = s1;
                       if (s0 === peg$FAILED) {
@@ -2048,7 +2052,7 @@
                         }
                         if (s1 !== peg$FAILED) {
                           peg$savedPos = s0;
-                          s1 = peg$f23.call(options);
+                          s1 = peg$f24.call(options);
                         }
                         s0 = s1;
                         if (s0 === peg$FAILED) {
@@ -2062,7 +2066,7 @@
                           }
                           if (s1 !== peg$FAILED) {
                             peg$savedPos = s0;
-                            s1 = peg$f24.call(options);
+                            s1 = peg$f25.call(options);
                           }
                           s0 = s1;
                         }
@@ -2400,7 +2404,7 @@
           }
         }
         peg$savedPos = s0;
-        s0 = peg$f25.call(options, s1, s2, s3, s4);
+        s0 = peg$f26.call(options, s1, s2, s3, s4);
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;
@@ -2478,7 +2482,7 @@
         }
         if (s3 !== peg$FAILED) {
           peg$savedPos = s0;
-          s0 = peg$f26.call(options, s2);
+          s0 = peg$f27.call(options, s2);
         } else {
           peg$currPos = s0;
           s0 = peg$FAILED;
@@ -2524,7 +2528,7 @@
           }
           if (s3 !== peg$FAILED) {
             peg$savedPos = s0;
-            s0 = peg$f26.call(options, s2);
+            s0 = peg$f27.call(options, s2);
           } else {
             peg$currPos = s0;
             s0 = peg$FAILED;
@@ -2577,7 +2581,7 @@
         s1 = peg$parse식별자();
         if (s1 !== peg$FAILED) {
           peg$savedPos = s0;
-          s1 = peg$f27.call(options, s1);
+          s1 = peg$f28.call(options, s1);
         }
         s0 = s1;
       }
@@ -2590,6 +2594,27 @@
 
       return s0;
     }
+
+
+      function __v__(o) {
+          if(Array.isArray(o)){
+              for(var i = 0; i < o.length; i++){
+                  o[i] = __v__(o[i]);
+              }
+              return o;
+          }else if(typeof o == 'function'){
+              return o();
+          }else if($.isPlainObject(o)){
+              for(var x in o){
+                  if(o.hasOwnProperty(x)){
+                      o[x] = __v__(o[x]);
+                  }
+              }
+          }else{
+              return o;
+          }
+      }
+
 
     peg$begin();
     peg$result = peg$startRuleFunction();
