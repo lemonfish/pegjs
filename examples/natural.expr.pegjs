@@ -13,6 +13,7 @@
                   o[x] = __v__(o[x]);
               }
           }
+          return o;
       }else{
           return o;
       }
